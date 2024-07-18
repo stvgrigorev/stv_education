@@ -1,0 +1,11 @@
+---
+# handlers file for web_service_deploy
+
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted
+- name: Restart Apache
+  service:
+    name: httpd
+    state: restarted

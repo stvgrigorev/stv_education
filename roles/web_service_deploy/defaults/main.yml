@@ -1,0 +1,4 @@
+---
+# defaults file for web_service_deploy
+
+destin_file: /var/www/html

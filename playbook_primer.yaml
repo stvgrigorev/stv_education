@@ -1,0 +1,79 @@
+---
+
+- name: Install Nginx and Upload my Web Page
+  hosts: all
+  become: yes
+
+  vars:
+   source_file: ./ansible_pr/index.html
+   destin_file: /var/www/html
+
+  tasks:
+  - name: Check and Print Linux Version
+    debug:
+      var: ansible_os_family
+
+  - block: #Block for Ubuntu and Debian#
+
+       - name: Install Nginx Web Server for Ubuntu or Debian
+         apt:
+           name: nginx
+           state: latest
+
+       - name: Copy MyHomePage to Servers
+         ansible.builtin.copy:
+           src: ~/ansible_pr/index.html # "{{ source_file }}"
+           dest: /var/www/html          #"{{ destin_file }}"
+           mode: 555
+          # notify: Restart Nginx
+
+       - name: Start WebServer and make it enable on boot for Ubuntu or Debian
+         service:
+           name: nginx
+           state: started
+           enabled: yes
+
+       - name: Check file privet.txt in /var/www/html
+         shell:
+           cmd: ls -la
+           chdir: /var/www/html
+
+    when: ansible_os_family in ["Ubuntu","Debian"]
+
+  - block: #Block for CentOS"
+
+       - name: Install Nginx Web Server for CentOS
+         yum:
+           name: httpd
+           state: lates
+
+       - name: Copy MyHomePage to Servers
+         copy:
+           src: ~/ansible_pr/privet.txt # "{{ source_file }}"
+           dest: /var/www/html          #"{{ destin_file }}"
+           mode: 555
+           notify: Restart Apache
+
+       - name: Start WebServer and make it enable on boot for CentOS
+         service:
+           name: httpd
+           state: started
+           enabled: yes
+
+       - name: Check file privet.txt in /var/www/html
+         shell:
+           cmd: la -la
+           chdir: /var/www/html
+
+    when: ansible_os_family == "CentOS"
+
+  handlers:
+  - name: Restart Nginx
+    service:
+      name: nginx
+      state: restarted
+
+  - name: Restart Apache
+    service:
+      name: httpd
+      state: restarted

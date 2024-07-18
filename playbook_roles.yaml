@@ -1,0 +1,8 @@
+---
+
+- name: Install Webservice and upload My Home Page
+  hosts: all
+  become: yes
+
+  roles:
+    - { role: web_service_deploy, when: ansible_system == 'Linux' }

@@ -1,0 +1,6 @@
+[host_group_1]
+linux_host1    ansible_host=<ip_adress>
+
+[host_group_2]
+linux_host2 ansible_host=<ip_adress>
+linux_host3 ansible_host=<ip_adress>
